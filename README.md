@@ -96,6 +96,7 @@ body{
 </div>
 
 <script>
+// Частицы фона
 for(let i=0;i<40;i++){
     let p=document.createElement("div");
     p.className="particle";
@@ -105,6 +106,95 @@ for(let i=0;i<40;i++){
     p.style.opacity=Math.random();
     document.body.appendChild(p);
 }
+
+// Canvas для фейерверков
+const canvas = document.createElement("canvas");
+canvas.style.position = "fixed";
+canvas.style.inset = "0";
+canvas.style.pointerEvents = "none";
+canvas.style.zIndex = "999";
+document.body.appendChild(canvas);
+
+const ctx = canvas.getContext("2d");
+
+function resize(){
+    canvas.width = innerWidth;
+    canvas.height = innerHeight;
+}
+resize();
+addEventListener("resize", resize);
+
+const particles = [];
+
+function firework(x, y){
+
+    for(let i=0;i<80;i++){
+
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 5;
+
+        particles.push({
+            x,
+            y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            life: 100,
+            size: 2 + Math.random() * 3,
+            hue: Math.random() * 360
+        });
+    }
+}
+
+function animate(){
+
+    ctx.fillStyle = "rgba(0,0,0,0.08)";
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    for(let i=particles.length-1;i>=0;i--){
+
+        const p = particles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        p.vy += 0.03;
+        p.life--;
+
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fillStyle =
+            `hsla(${p.hue},100%,65%,${p.life/100})`;
+        ctx.fill();
+
+        if(p.life<=0){
+            particles.splice(i,1);
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+// Автоматические фейерверки вокруг даты
+setInterval(()=>{
+
+    const rect =
+        document.getElementById("t")
+        .getBoundingClientRect();
+
+    const x =
+        rect.left +
+        Math.random()*rect.width;
+
+    const y =
+        rect.top -
+        50 -
+        Math.random()*150;
+
+    firework(x,y);
+
+},1200);
 </script>
 
 </body>
