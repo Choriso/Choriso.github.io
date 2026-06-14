@@ -1,4 +1,5 @@
-# <!DOCTYPE html>
+# 
+<!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <body style="background:white;color:black;font:10vw monospace;display:flex;justify-content:center;align-items:center;height:100vh;margin:0">
